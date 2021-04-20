@@ -1,0 +1,22 @@
+{
+  "scriptFile": "__init__.py",
+  "bindings": [
+    {
+      "type": "eventHubTrigger",
+      "name": "events",
+      "direction": "in",
+      "eventHubName": "AzureIoTHubName",
+      "connection": "AzureIoTHubConnectionString",
+      "cardinality": "many",
+      "consumerGroup": "%ConsumerGroup%",
+      "dataType": "binary"
+    },
+    {
+      "type": "signalR",
+      "name": "outMessage",
+      "hubName": "%AzureSignalRHubName%",
+      "connectionStringSetting": "AzureSignalRConnectionString",
+      "direction": "out"
+    }
+  ]
+}

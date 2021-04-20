@@ -1,0 +1,27 @@
+{
+    "IsEncrypted": false,
+    "Values": {
+      "AzureWebJobsStorage": "AzureStorageConnectionString",
+      "TableStorageName":"orchestrationIdTable",
+      "TableStoragePartitionKey":"orchestrationIdPK",
+      "TableStorageRowKey":"orchestrationIdRK",
+      "FUNCTIONS_WORKER_RUNTIME": "python",
+      "PYTHON_THREADPOOL_THREAD_COUNT": 32,
+      "FUNCTIONS_WORKER_PROCESS_COUNT": 5,
+      "TemperatureThreshold":50,
+      "AzureSignalRHubName":"HubNameOfAzureSignaRInstance",
+      "AzureSignalRConnectionString":"ConnectionStringOfAzureSignaRInstance",
+      "AzureIoTHubName":"HubNameOfIoTHubInstance",
+      "AzureIoTHubConnectionString":"ConnectionStringOfAzureIoTHubInstance",
+      "ConsumerGroup":"NameOfDedicatedConsumerGroupInIoTHubInstance",
+      "TwilioPhoneNumber":"PhoneNumberCreatedByTwilio",
+      "TwilioAccountSid":"AccountSidForTwilioAccount",
+      "TwilioAuthToken":"AuthTokenForTwilioAccount",
+      "OnCallPhoneNumber":"PhoneNumberToSendAlertsTo - Format should be -> (AREACODE) 888 8888",
+      "SendEventUri":"https://FUNCTIONAPPNAME.azurewebsites.net/api/orchestrator?code=FUNCTIONAPPKEY&existingInstanceId={instanceId}",
+      "StartOrchestrationUri":"https://FUNCTIONAPPNAME.azurewebsites.net/api/orchestrator?code=FUNCTIONAPPKEY",
+      "OrchestratioStatusnUri":"http://FUNCTIONAPPNAME.azurewebsites.net/runtime/webhooks/durabletask/instances/{instanceId}?taskHub=AlertDurableTaskHub&connection=Storage&code=durabletask_extension_key"
+      
+    }
+  }
+  
