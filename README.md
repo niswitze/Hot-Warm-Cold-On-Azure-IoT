@@ -65,12 +65,12 @@ The below prerequisites are required for local development:
   - This prerequisite is only needed if you are not comfortable using Visual Studio Code for C# or ASP.NET MVC development
   - Ensure at least version [.NET 5.0](https://dotnet.microsoft.com/download/dotnet/5.0) has been installed as well
 - [Azure Function Core Tools](https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local?tabs=linux%2Ccsharp%2Cbash)
-- [Azure Data Explorer](https://docs.microsoft.com/en-us/azure/data-explorer/create-cluster-database-portal)
+- [Azure Data Explorer (ADX)](https://docs.microsoft.com/en-us/azure/data-explorer/create-cluster-database-portal)
 - [Azure IoT Hub](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-create-through-portal)
 - [Azure SignalR](https://docs.microsoft.com/en-us/azure/azure-signalr/signalr-quickstart-azure-functions-csharp#create-an-azure-signalr-service-instance)
-  - Ensure the ServiceMode setting for this resource is set to <strong>Serverless</strong>
-- Azure AD
-  - Specifically, you will need enough acces to create and modify an App Registration
+  - Ensure the <strong>ServiceMode</strong> setting for this resource is set to <strong>Serverless</strong>
+- Azure Active Directory (AAD)
+  - Specifically, you will need enough acces to create and modify an App Registration for local development use with Azure Data Explorer
 
 The below prerequisites are only needed for production use in Azure:
 
@@ -95,9 +95,24 @@ or download and extract the repository .zip file.
 ### Step 2: Configure Azure Resources
 
 - #### Azure IoT Hub
+    1. After creating an IoT Hub instance, create two [consumer groups](https://github.com/MicrosoftDocs/azure-docs/blob/master/includes/iot-hub-get-started-create-consumer-group.md)
+       - A seperate consumer group must be created for the Azure Function and Azure Data Explorer services
 - #### Azure Data Explorer 
-- #### Azure SignalR
+    1. After creating an Azure Data Explorer instance, create a data connection to the Azure IoT Hub instance
+       - The following [public documentation](https://docs.microsoft.com/en-us/azure/data-explorer/ingest-data-iot-hub) is a walk through of how to create an Azure IoT Hub data connection in Data Explorer
+       - For this sample, the following KQL statements should be used for creating the table and data mapping 
+        ```Shell
+        .create table TemperatureData (DeviceId: string, Temperature: real, TelemetryType: string, EnqueuedTime:datetime)
 
+        .create table TemperatureData ingestion json mapping 'TemperatureDataMapping' 
+        '[{"column":"DeviceId","path":"$.deviceId","datatype":"string"},{"column":"Temperature","path":"$.temperature","datatype":"real"},{"column":"TelemetryType","path":"$.telemetryType","datatype":"string"},{"column":"EnqueuedTime","path":"$.iothub-enqueuedtime","datatype":"datetime"}]'
+        ```
+       - When creating the data connection in Azure Data Explorer, ensure the property <strong>iothub-enqueuedtime</strong> has been selected from the <strong>Event system properties</strong> dropdown
+     1. For local development, an App Registration needs to be created in Azure Active Directory and given access to the Data Explorer instance
+        - The following [public documentation](https://docs.microsoft.com/en-us/azure/data-explorer/provision-azure-ad-app) is a walk through of how to create an App Registration in Azure Active Directory and assigning it access to the Data Explorer instance
+  
+- #### Azure SignalR
+    1. For local development, there is no configuration that needs to take place after creating the Azure SignalR instance. However, during creation ensure  the <strong>ServiceMode</strong> setting for this resource is set to <strong>Serverless</strong>
 ### Step 3: Configure Applications
 
 - #### IoTFunctionApp
