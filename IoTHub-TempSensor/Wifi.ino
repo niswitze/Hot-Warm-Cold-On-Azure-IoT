@@ -15,7 +15,7 @@ void initWifi()
     while (WiFi.status() != WL_CONNECTED)
     {
         // Get Mac Address and show it.
-        // WiFi.macAddress(mac) save the mac address into a six length array, but the endian may be different. The huzzah board should
+        // WiFi.macAddress(mac) save the mac address into a six length array, but the endian may be different. The board should
         // start from mac[0] to mac[5], but some other kinds of board run in the oppsite direction.
         uint8_t mac[6];
         WiFi.macAddress(mac);

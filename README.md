@@ -109,7 +109,7 @@ or download and extract the repository .zip file.
         ```
        - When creating the data connection in Azure Data Explorer, ensure the property <strong>iothub-enqueuedtime</strong> has been selected from the <strong>Event system properties</strong> dropdown
      1. For local development, an App Registration needs to be created in Azure Active Directory and given access to the Data Explorer instance
-        - The following [public documentation](https://docs.microsoft.com/en-us/azure/data-explorer/provision-azure-ad-app) is a walk through of how to create an App Registration in Azure Active Directory and assigning it access to the Data Explorer instance
+        - The following [public documentation](https://docs.microsoft.com/en-us/azure/data-explorer/provision-azure-ad-app) is a walk through of how to create an App Registration in Azure Active Directory and assign it access to the Data Explorer instance
   
 - #### Azure SignalR
     1. For local development, there is no configuration that needs to take place after creating the Azure SignalR instance. However, during creation ensure  the <strong>ServiceMode</strong> setting for this resource is set to <strong>Serverless</strong>
@@ -239,21 +239,34 @@ or download and extract the repository .zip file.
         - By default, this prompt will dissapear after 15 seconds. If the prompt does not show or is initially missed, just reset the ESP8226 with the Serial Monitor opened.
     7. For configuring this sample to run with IoT Edge or any additional guidance, please review the commented intro in file IoTHub-TempSensor.ino.
 
-### Step 4 (Optional): Configure & Deploy Demo Applications to Azure
+### Step 4 (Optional): Deploy Applications to Azure
 
-#### Azure Key Vault
-#### Azure Managed Identities
-#### IoTFunctionApp
-#### IoTWebApp
-#### Azure Function App
-#### Azure App Service
-#### Azure SignalR
-
+- #### Azure Key Vault
+    1. For production use, create an Azure Key Vault instance and move all configuration settings from the IoTFunctionApp and IoTWebApp into it as secrets
+        - For the IoTWebApp, configuration settings ApplicationClientId, ApplicationSecret, and ApplicationAuthority do not need to be moved to the Azure Key Vault instance
+- #### Azure Function App
+    1. After creating an Azure Function App instance, [publish the IoTFunctionApp](https://docs.microsoft.com/en-us/azure/azure-functions/functions-develop-vs-code?tabs=csharp#publish-to-azure) code to it from VS Code
+    2. Enable the Azure Function App's [system managed identity](https://docs.microsoft.com/en-us/azure/app-service/overview-managed-identity?tabs=dotnet#add-a-system-assigned-identity)
+    1. Assign the Azure Function App's system managed identity to the Azure Key Vault instance using an [access policy](https://docs.microsoft.com/en-us/azure/app-service/app-service-key-vault-references#granting-your-app-access-to-key-vault)
+        - The minimum level of permissions for this policy should only be <strong>Get</strong> for the <strong>Secrets</strong> resource 
+    1. Configure the Azure Function App's app settings to use [Key Vault references](https://docs.microsoft.com/en-us/azure/app-service/app-service-key-vault-references)
+       - An entry for each setting in local.settings.json will need to be added to the Azure Function App's app settings with the same name, but the setting's value will need to be a Key Vault reference
+- #### Azure App Service
+    1. After creating an Azure App Service, [publish the IoTWebApp](https://docs.microsoft.com/en-us/visualstudio/deployment/quickstart-deploy-to-azure?view=vs-2019) code to it from Visual Studio
+    2. Enable the Azure App Service's [system managed identity](https://docs.microsoft.com/en-us/azure/app-service/overview-managed-identity?tabs=dotnet#add-a-system-assigned-identity)
+    3. Assign the Azure App Service's system managed identity to the Azure Key Vault instance using an [access policy](https://docs.microsoft.com/en-us/azure/app-service/app-service-key-vault-references#granting-your-app-access-to-key-vault)
+        - The minimum level of permissions for this policy should only be <strong>Get</strong> for the <strong>Secrets</strong> resource 
+    4. Configure the Azure App Service's app settings to use [Key Vault references](https://docs.microsoft.com/en-us/azure/app-service/app-service-key-vault-references)
+       - An entry for each setting in appsettings.Development.json will need to be added to Azure App Service's app settings with the same name, but the setting's value will need to be a Key Vault reference
+    1. Assign the Azure App Service's system managed identity access to the Data Explorer instance
+        - The process to assign a system managed identity access at the database level for an Azure Data Explorer instance is the same as the following [public documentation](https://docs.microsoft.com/en-us/azure/data-explorer/provision-azure-ad-app#grant-the-service-principal-access-to-an-azure-data-explorer-database). The only difference is, instead of using an App Registration's ApplicationId, use the system managed identity's ID.
+- #### Azure SignalR
+    1. For production use, [restrict the CORS setting](https://docs.microsoft.com/en-us/cli/azure/signalr/cors?view=azure-cli-latest) of the Azure SignalR instance to only allow requests from either an origin of the App Service or Function App base URIs.  
 ## We'd love your feedback!
 
 > :information_source: Did the sample not work for you as expected? Then please reach out to us using the [GitHub Issues](../../../issues) page.
 
-## About the code
+## About the Code
 
 ## Community Help and Support
 
