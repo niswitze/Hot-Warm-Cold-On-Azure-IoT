@@ -13,7 +13,7 @@ int WAIT_INTERVAL = 5000;
 #define TELEMETRY_TYPE "temperature"
 
 //Default data rate to use for Serial
-#define DATA_RATE 57600
+#define DATA_RATE 115200
 
 // EEPROM address configuration
 #define EEPROM_SIZE 512

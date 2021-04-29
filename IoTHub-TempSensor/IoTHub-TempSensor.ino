@@ -17,6 +17,7 @@ Please use the below software and corresponding versions for this demo:
   4. AzureIoTProtocol_MQTT Library - version 1.5.0
   5. AzureIoTUtility Library - version 1.5.0
   6. ArduinoJson Library - version 6.17.3
+  7. ESP8266 Board Version - 2.7.4
 
 For all users who plane to either use this sample or the AzureIoTHub library with Azure IoT Hub directly, you will need to modify the build.extra_flags value 
 in the esp8266's platform.txt file to be -DESP8266 -DDONT_USE_UPLOADTOBLOB -DUSE_BALTIMORE_CERT

@@ -71,6 +71,8 @@ The below prerequisites are required for local development:
   - Ensure the <strong>ServiceMode</strong> setting for this resource is set to <strong>Serverless</strong>
 - Azure Active Directory (AAD)
   - Specifically, you will need enough acces to create and modify an App Registration for local development use with Azure Data Explorer
+- [Twilio Account] (https://www.twilio.com/try-twilio)
+  - Only the <strong>Free</strong> version of this service is required for running this sample
 
 The below prerequisites are only needed for production use in Azure:
 
@@ -232,9 +234,9 @@ or download and extract the repository .zip file.
     2. Ensure the [ESP8266 platform](https://arduino-esp8266.readthedocs.io/en/latest/installing.html) has been installed
     3. Configure the DHT11 sensor on the ESP8266's GPIO pin 14
        - This value can be updated by changing the value of the TEMP_PIN variable declared in config.h
-    4. Upload the this project to your ESP8266 using an Upload Speed of 57600
+    4. Upload the this project to your ESP8266 using an Upload Speed of 115200
        - This value can be updated by changing the value of the DATA_RATE variable declared in config.h
-    5. Once the upload has been completed, open the Serial Monitor using 57600 as the BAUD rate
+    5. Once the upload has been completed, open the Serial Monitor using 115200 as the BAUD rate
     6. In the serial monitor, a prompt will be appear to enter the connection string for an Azure IoT Hub instance and WIFI credentials. These values will then be saved in memory using EEPROM.
         - By default, this prompt will dissapear after 15 seconds. If the prompt does not show or is initially missed, just reset the ESP8226 with the Serial Monitor opened.
     7. For configuring this sample to run with IoT Edge or any additional guidance, please review the commented intro in file IoTHub-TempSensor.ino.
@@ -261,18 +263,19 @@ or download and extract the repository .zip file.
     1. Assign the Azure App Service's system managed identity access to the Data Explorer instance
         - The process to assign a system managed identity access at the database level for an Azure Data Explorer instance is the same as the following [public documentation](https://docs.microsoft.com/en-us/azure/data-explorer/provision-azure-ad-app#grant-the-service-principal-access-to-an-azure-data-explorer-database). The only difference is, instead of using an App Registration's ApplicationId, use the system managed identity's ID.
 - #### Azure SignalR
-    1. For production use, [restrict the CORS setting](https://docs.microsoft.com/en-us/cli/azure/signalr/cors?view=azure-cli-latest) of the Azure SignalR instance to only allow requests from either an origin of the App Service or Function App base URIs.  
+    1. For production use, [restrict the CORS setting](https://docs.microsoft.com/en-us/cli/azure/signalr/cors?view=azure-cli-latest) of the Azure SignalR instance to only allow requests from an origin of the App Service and Function App base URIs.  
 ## We'd love your feedback!
 
 > :information_source: Did the sample not work for you as expected? Then please reach out to us using the [GitHub Issues](../../../issues) page.
 
 ## About the Code
+This sample demonstrates how to create Hot, Warm, and Cold data paths using [Azure IoT Hub](https://docs.microsoft.com/en-us/azure/iot-hub/about-iot-hub) or [IoT Edge (version 1.1)](https://docs.microsoft.com/en-us/azure/iot-edge/about-iot-edge?view=iotedge-2018-06), [App Service](https://docs.microsoft.com/en-us/azure/app-service/), [Functions](https://docs.microsoft.com/en-us/azure/azure-functions/), [SignalR](https://docs.microsoft.com/en-us/azure/azure-signalr/signalr-overview), and [Data Explorer](https://docs.microsoft.com/en-us/azure/data-explorer/). Once the ESP8266 has connected to Azure IoT Hub, using the code from the IoTHub-TempSensor application, it will start sending temperature data reported from the DHT11 sensor. From Azure IoT Hub, the data will be ingested, using two seperate consumer groups, by Azure Data Explorer and an Azure Function. Azure Data Explorer will ingest all temperature data sent to Azure IoT Hub and serve as the Cold, or Hot if using a [cache policy](https://docs.microsoft.com/en-us/azure/data-explorer/kusto/management/cachepolicy), data path. The Azure Function, using the code from the IoTFunctionApp application, will ingest all temperature data sent to Azure IoT Hub and output the data to Azure SignalR. Azure SignalR will in turn output this temperature data to all clients listening on a WebSocket based connection, which allows for data to be reported in real time. Also, the Azure Function will send a text message based alert, using Twilio, if the temperature data falls below a certain threshold. The Azure Function accomplishes this alerting by invoking a Durable Function, named HttpTriggerDurable, which will send a text message every 5 minutes until the alert has been acknowledged. On startup, the web application hosted on Azure App Service, using the code from the IoTWebApp application, will establish a WebSocket based connection to Azure SignalR. Then, the last 24 hours worth of temperature data, from Azure Data Explorer, will be displayed per device in the web application and serve as the Warm data path. All of these device records displayed in the web application will then be updated in real time using the temperature data received from the Azure SignalR connection.
 
 ## Community Help and Support
 
 If you find a bug in the sample, raise the issue on [GitHub Issues](../../../issues).
 
-To provide feedback on or suggest features for Azure Active Directory, visit [User Voice page](https://feedback.azure.com/forums/321918-azure-iot-hub-dps-sdks).
+To provide feedback on or suggest features for Azure IoT Hub or IoT Edge, visit [User Voice page](https://feedback.azure.com/forums/321918-azure-iot-hub-dps-sdks).
 
 ## Contributing
 
