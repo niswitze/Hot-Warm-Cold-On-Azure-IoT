@@ -39,7 +39,11 @@ This sample demonstrates how to create Hot, Warm, and Cold data paths using [Azu
 6. The App Service hosts an ASP.NET MVC, .NET 5 based, web app that displays the last 24 hours worth of temperature data from Azure Data Explorer
    1. This web app also creates a WebSock connection to the Azure SignalR instance to receive temperature data in real time as well
 
-![Overview](./ReadmeFiles/topology.png)
+</br>
+
+![Overview](./Assets/Hot-Warm-Cold-Diagram.jpg)
+
+</br>
 
 ## Contents
 
