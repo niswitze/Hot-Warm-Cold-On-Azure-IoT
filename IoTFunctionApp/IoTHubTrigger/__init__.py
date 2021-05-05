@@ -33,7 +33,7 @@ async def main(events: List[func.EventHubEvent], outMessage: func.Out[str]):
         if json.loads(iot_message)['temperature'] < int(temperature_threshold):
             
             table_service = TableService(connection_string=os.getenv("AzureWebJobsStorage"))
-            # table_service = TableService(connection_string="AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;DefaultEndpointsProtocol=http;BlobEndpoint=http://127.0.0.1:10000/devstoreaccount1;QueueEndpoint=http://127.0.0.1:10001/devstoreaccount1;TableEndpoint=http://127.0.0.1:10002/devstoreaccount1;")
+           
             try:
                 #checking to see if the table and orchestration id record exist
                 orchestration_id = table_service.get_entity(
