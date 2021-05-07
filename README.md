@@ -32,12 +32,12 @@ This sample demonstrates how to create Hot, Warm, and Cold data paths using [Azu
 
 1. The ESP8226 connects either directly to an Azure IoT Hub or IoT Edge enabled gateway and submits temperature data produced by a DHT11 sensor.
 2. This temperature data is then ingested from Azure IoT Hub to an Azure Function and Data explorer.
-3. The Azure Data Explorer instance ingests all temperature data for long-term storage
-4. The Azure Function broadcasts all temperature data to an Azure SignalR instance
+3. An instance of Azure Data Explorer ingests all temperature data for long-term storage
+4. An Azure Function broadcasts all temperature data to an Azure SignalR instance
    - This Azure Function also sends out a text alert if the temperature data starts to fall below a certain threshold
 5. The Azure SignalR instance broadcasts temperature data to all clients listening on a WebSocket based connection
-6. The App Service hosts an ASP.NET MVC, .NET 5 based, web app that displays the latest temperature data record per device from the last 24 hours from Azure Data Explorer
-7. This web app also creates a WebSock connection to the Azure SignalR instance to receive temperature data in real time as well
+6. An App Service hosts an ASP.NET MVC, .NET 5 based, web app that displays the latest temperature data record per device from the last 24 hours from Azure Data Explorer
+7. The web app creates a WebSocket connection to the Azure SignalR instance to receive temperature data in real time
 
 </br>
 
