@@ -30,18 +30,20 @@ This sample demonstrates how to create Hot, Warm, and Cold data paths using [Azu
 
 ## Scenario
 
-1. The ESP8226 connects either directly to an Azure IoT Hub or IoT Edge enabled gateway and submits temperature data produced by a DHT11 sensor.
-2. This temperature data is then ingested from Azure IoT Hub to an Azure Function and Data explorer.
-3. An instance of Azure Data Explorer ingests all temperature data for long-term storage
-4. An Azure Function broadcasts all temperature data to an Azure SignalR instance
-   - This Azure Function also sends out a text alert if the temperature data starts to fall below a certain threshold
-5. The Azure SignalR instance broadcasts temperature data to all clients listening on a WebSocket based connection
-6. An App Service hosts an ASP.NET MVC, .NET 5 based, web app that displays the latest temperature data record per device from the last 24 hours from Azure Data Explorer
-7. The web app creates a WebSocket connection to the Azure SignalR instance to receive temperature data in real time
-
+<div style="text-align:center"><img src="./Assets/Hot-Warm-Cold-Diagram.jpg" /></div>
 </br>
 
-![Overview](./Assets/Hot-Warm-Cold-Diagram.jpg)
+1. The ESP8226 connects either directly to an Azure IoT Hub or IoT Edge enabled gateway and submits temperature data produced by a DHT11 sensor. 
+> :information_source: (NOTE) For this sample, these hardware specifications are not required and any other device or simulator can be used. Just ensure the device or simulator in use has the capability to send temperature data to Azure IoT Hub in the same format as detailed in the IoTHub-TempSensor device code.
+1. This temperature data is then ingested from Azure IoT Hub to an Azure Function and Data explorer.
+2. An instance of Azure Data Explorer ingests all temperature data for long-term storage
+3. An Azure Function broadcasts all temperature data to an Azure SignalR instance
+   - This Azure Function also sends out a text alert if the temperature data starts to fall below a certain threshold
+4. The Azure SignalR instance broadcasts temperature data to all clients listening on a WebSocket based connection
+5. An App Service hosts an ASP.NET MVC, .NET 5 based, web app that displays the latest temperature data record per device from the last 24 hours from Azure Data Explorer
+6. Finally, the web app creates a WebSocket connection to the Azure SignalR instance to receive temperature data in real time
+   - If set up correctly, the web app will look like the following:
+<div style="text-align:center"><img src="./Assets/Web App - Final Result.PNG" /></div>
 
 </br>
 
@@ -49,7 +51,7 @@ This sample demonstrates how to create Hot, Warm, and Cold data paths using [Azu
 
 | File/folder       | Description                                |
 |-------------------|--------------------------------------------|
-| `IotFunctionApp/`| The Azure Function App that submits all temperature data to SignalR & alerts if the temperature data is below a certain threshold.|
+| `IoTFunctionApp/`| The Azure Function App that submits all temperature data to SignalR & alerts if the temperature data is below a certain threshold.|
 | `IoTHub-TempSensor/`| The ESP8226 device code for connecting and sending temperature data to either Azure IoT Hub or IoT Edge.|
 | `IoTWebApp/`| The web app for the Azure App Service that displays the last 24 hours worth of temperature data store in Data Explorer and all temperature data sent through the SignalR instance.|
 | `CODE_OF_CONDUCT.md` | Guidelines for contributing to the sample. |
@@ -273,7 +275,7 @@ or download and extract the repository .zip file.
 > :information_source: Did the sample not work for you as expected? Then please reach out to us using the [GitHub Issues](../../../issues) page.
 
 ## About the Code
-This sample demonstrates how to create Hot, Warm, and Cold data paths using [Azure IoT Hub](https://docs.microsoft.com/en-us/azure/iot-hub/about-iot-hub) or [IoT Edge (version 1.1)](https://docs.microsoft.com/en-us/azure/iot-edge/about-iot-edge?view=iotedge-2018-06), [App Service](https://docs.microsoft.com/en-us/azure/app-service/), [Functions](https://docs.microsoft.com/en-us/azure/azure-functions/), [SignalR](https://docs.microsoft.com/en-us/azure/azure-signalr/signalr-overview), and [Data Explorer](https://docs.microsoft.com/en-us/azure/data-explorer/). Once the ESP8266 has connected to Azure IoT Hub, using the code from the IoTHub-TempSensor application, it will start sending temperature data reported from the DHT11 sensor. From Azure IoT Hub, the data will be ingested, using two seperate consumer groups, by Azure Data Explorer and an Azure Function. Azure Data Explorer will ingest all temperature data sent to Azure IoT Hub and serve as the Cold, or Hot if using a [cache policy](https://docs.microsoft.com/en-us/azure/data-explorer/kusto/management/cachepolicy), data path. The Azure Function, using the code from the IoTFunctionApp application, will ingest all temperature data sent to Azure IoT Hub and output the data to Azure SignalR. Azure SignalR will in turn output this temperature data to all clients listening on a WebSocket based connection, which allows for data to be reported in real time. Also, the Azure Function will send a text message based alert, using Twilio, if the temperature data falls below a certain threshold. The Azure Function accomplishes this alerting by invoking a Durable Function, named HttpTriggerDurable, which will send a text message every 5 minutes until the alert has been acknowledged. On startup, the web application hosted on Azure App Service, using the code from the IoTWebApp application, will establish a WebSocket based connection to Azure SignalR. Then, the latest temperature data record per device from the last 24 hours, from Azure Data Explorer, will be displayed per device in the web application and serve as the Warm data path. All of these device records displayed in the web application will then be updated in real time using the temperature data received from the Azure SignalR connection.
+This sample demonstrates how to create Hot, Warm, and Cold data paths using [Azure IoT Hub](https://docs.microsoft.com/en-us/azure/iot-hub/about-iot-hub) or [IoT Edge (version 1.1)](https://docs.microsoft.com/en-us/azure/iot-edge/about-iot-edge?view=iotedge-2018-06), [App Service](https://docs.microsoft.com/en-us/azure/app-service/), [Functions](https://docs.microsoft.com/en-us/azure/azure-functions/), [SignalR](https://docs.microsoft.com/en-us/azure/azure-signalr/signalr-overview), and [Data Explorer](https://docs.microsoft.com/en-us/azure/data-explorer/). Once the ESP8266 has connected to Azure IoT Hub, using the code from the IoTHub-TempSensor application, it will start sending temperature data reported from the DHT11 sensor. From Azure IoT Hub, the data will be ingested, using two seperate consumer groups, by Azure Data Explorer and an Azure Function. Azure Data Explorer will ingest all temperature data sent to Azure IoT Hub and serve as the Cold, or Hot if using a [cache policy](https://docs.microsoft.com/en-us/azure/data-explorer/kusto/management/cachepolicy), data path. The Azure Function, using the code from the IoTFunctionApp application, will ingest all temperature data sent to Azure IoT Hub and output the data to Azure SignalR. Azure SignalR will in turn output this temperature data to all clients listening on a WebSocket based connection, which allows for data to be reported in real time. Also, the Azure Function will send a text message based alert, using Twilio, if the temperature data falls below a certain threshold. The Azure Function accomplishes this alerting by invoking a Durable Function, named HttpTriggerDurable, which will send a text message every 5 minutes until the alert has been acknowledged. On startup, the web application hosted on Azure App Service, using the code from the IoTWebApp application, will establish a WebSocket based connection to Azure SignalR. Then, the latest temperature data record per device from the last 24 hours, from Azure Data Explorer, will be displayed per device in the web application and serve as the Warm data path. All of these device records displayed in the web application will then be updated in real time using the temperature data received from the Azure SignalR connection. 
 
 ## Community Help and Support
 
