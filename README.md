@@ -28,7 +28,7 @@ urlFragment: Hot-Warm-Cold-On-Azure-IoT
 ## Overview
 This sample demonstrates how to create Hot, Warm, and Cold data paths using [Azure IoT Hub](https://docs.microsoft.com/en-us/azure/iot-hub/about-iot-hub) or [IoT Edge (version 1.1)](https://docs.microsoft.com/en-us/azure/iot-edge/about-iot-edge?view=iotedge-2018-06), [App Service](https://docs.microsoft.com/en-us/azure/app-service/), [Functions](https://docs.microsoft.com/en-us/azure/azure-functions/), [SignalR](https://docs.microsoft.com/en-us/azure/azure-signalr/signalr-overview), and [Data Explorer](https://docs.microsoft.com/en-us/azure/data-explorer/).
 
-To see the published article that introduces this sample and why it was created, please visit this <a href="https://techcommunity.microsoft.com/t5/fasttrack-for-azure/hot-warm-and-cold-data-paths-with-iot-on-azure/ba-p/2336035">link</a> under the FastTrack for Azure's Blog.
+To understand more about why this sample was created and what it aims to accomplish, please visit its official <a href="https://techcommunity.microsoft.com/t5/fasttrack-for-azure/hot-warm-and-cold-data-paths-with-iot-on-azure/ba-p/2336035">article</a>  on Tech Community.
 
 ## Scenario
 
